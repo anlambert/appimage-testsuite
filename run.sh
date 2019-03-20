@@ -18,30 +18,4 @@ else
 fi
 
 chmod u+x "$ai"
-docker run --rm -it -e DISPLAY=${IP}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/aitest -v "$ai":/AppImage -v "$HOME":/shared --cap-add=SYS_PTRACE --security-opt seccomp:unconfined ${image} bash
-
-exit 0
-
-
-rm -rf aitest
-if [ "$distro" = "debian-testing" ]; then
-	mkdir -p aitest
-	cp -a aitest-debian-testing.sh aitest/aitest.sh
-	cd aitest
-	docker run --rm -it -e DISPLAY=${IP}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/aitest -v "$ai":/AppImage debian:testing
-	exit
-fi
-
-if [ "$distro" = "fedora-26" ]; then
-	mkdir -p aitest
-	cp -aL aitest-fedora-26.sh aitest/aitest.sh
-	cd aitest
-	docker run --rm -it -e DISPLAY=${IP}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/aitest -v "$ai":/AppImage fedora:26 bash
-fi
-
-if [ "$distro" = "fedora-27" ]; then
-	mkdir -p aitest
-	cp -aL aitest-fedora-27.sh aitest/aitest.sh
-	cd aitest
-	docker run --rm -it -e DISPLAY=${IP}:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/aitest -v "$ai":/AppImage photoflow/aitest-${distro} bash
-fi
+docker run --rm -it -e DISPLAY=${IP}${DISPLAY} -v /tmp/.X11-unix:/tmp/.X11-unix -v $(pwd):/aitest -v "$ai":/AppImage -v "$HOME":/shared --cap-add=SYS_PTRACE --security-opt seccomp:unconfined ${image} /aitest/aitest.sh
